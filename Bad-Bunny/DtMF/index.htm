@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Bad Bunny - DtMF</title>
+<link rel="icon" href="../../favicon.png" type="image/x-icon">
+<style>
+body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+    background-color: #1f1f1f;
+    color: #fff;
+}
+
+header {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    padding: 20px;
+    background-color: #5E5E5E;
+}
+
+header img {
+    width: 120px;
+    height: 120px;
+    border-radius: 12px;
+    object-fit: cover;
+}
+
+header h1 {
+    font-size: 2em;
+    margin: 0;
+}
+
+.playlist-container {
+    display: flex;
+    flex-direction: column;
+    padding: 20px;
+    gap: 10px;
+}
+
+.track-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 12px;
+    background-color: #333333;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: transform 0.2s, background-color 0.2s;
+}
+
+.track-item:hover {
+    transform: translateY(-3px);
+    background-color: #fc32;
+}
+
+.track-item.active {
+    background-color: #3e8fc3;
+    color: #042027;
+}
+
+.track-info {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.track-info img {
+    width: 60px;
+    height: 60px;
+    border-radius: 8px;
+    object-fit: cover;
+    background-color: #333;
+}
+
+.track-text {
+    display: flex;
+    flex-direction: column;
+}
+
+.track-text .title {
+    font-weight: bold;
+}
+
+.track-text .artist {
+    font-size: 14px;
+    color: #bbb;
+}
+
+.player {
+    position: sticky;
+    bottom: 0;
+    background-color: #333333;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 12px;
+    padding: 10px;
+    border-top: 1px solid #fc32;
+}
+
+.player button {
+    background: none;
+    border: none;
+    cursor: pointer;
+    transition: transform 0.2s;
+}
+
+.player button:hover {
+    transform: scale(1.2);
+}
+.player button:active {
+    transform: scale(0.9);
+}
+
+.player img {
+    width: 40px;
+    height: 40px;
+}
+</style>
+</head>
+<body>
+
+<header>
+    <img src="https://www.dropbox.com/scl/fi/rgz4u0rcwwn2pz8m6x2ur/Folder.jpg?rlkey=63xogmw77e8tfidksp6a4qt7w&st=j0871eqi&raw=1" alt="Debi Tirar Mas Fotos">
+    <h1>DeBÍ TiRAR MáS FOToS</h1>
+</header>
+
+<div class="playlist-container" id="playlist">
+    <!-- Tracks generados aquí -->
+</div>
+
+<div class="player">
+    <button id="prev"><img src="prev.png" alt="Anterior"></button>
+    <button id="play"><img src="play.png" alt="Play/Pause"></button>
+    <button id="next"><img src="next.png" alt="Siguiente"></button>
+    <button id="loop"><img src="norepeat.png" alt="Repetir"></button>
+</div>
+
+<script>
+const albumCover = 'https://www.dropbox.com/scl/fi/rgz4u0rcwwn2pz8m6x2ur/Folder.jpg?rlkey=63xogmw77e8tfidksp6a4qt7w&st=j0871eqi&raw=1';
+
+const tracks = [
+    { title: 'Baile Inolvidable', artist: 'Bad Bunny', url: 'https://www.dropbox.com/scl/fi/novvohlxtnep1bqv5my11/Baile-Inolvidable.mp3?rlkey=ici64p6npfpir0w46zk0rvlmg&st=ayq3vlxa&raw=1', cover: albumCover },
+    { title: 'Bokete', artist: 'Bad Bunny', url: 'https://www.dropbox.com/scl/fi/zgd398npjjce05j1y1mi8/Bokete.mp3?rlkey=7g3uxkdt1aoontpwd95wcj4ot&st=7dougrsv&raw=1', cover: albumCover },
+    { title: 'Café Con Ron', artist: 'Bad Bunny', url: 'https://www.dropbox.com/scl/fi/ifsbq2zqv8rv5tzo126t0/Caf-Con-Ron.mp3?rlkey=loiszj56yx9vi5j674cn7lhmb&st=mhtmp5ap&raw=1', cover: albumCover },
+    { title: 'DTMF', artist: 'Bad Bunny', url: 'https://www.dropbox.com/scl/fi/nf2t4mwa17kfcnny6qxbj/DTMF.mp3?rlkey=phzd0bgnn6c8ia5hm8zgym9bi&st=e1ynvnbp&raw=1', cover: albumCover },
+    { title: 'El Clúb', artist: 'Bad Bunny', url: 'https://www.dropbox.com/scl/fi/2u49bp889ggim08ck17fy/El-Cl-b.mp3?rlkey=jrge9ivwzus9uxsq5iglah8y4&st=p26j5bv1&raw=1', cover: albumCover },
+    { title: 'Eoo', artist: 'Bad Bunny', url: 'https://www.dropbox.com/scl/fi/dyket9acykgbndxh6we2l/Eoo.mp3?rlkey=p4kp9maknngu578t3eovkurou&st=r2gmc0c3&raw=1', cover: albumCover },
+    { title: 'Ketu Tecre', artist: 'Bad Bunny', url: 'https://www.dropbox.com/scl/fi/yjwwo40334s8orrnhtr0h/Ketu-Tecre.mp3?rlkey=vm6z8e6h1qn9zxphetc5ipg4x&st=dqofxgyi&raw=1', cover: albumCover },
+    { title: 'Kloufrends', artist: 'Bad Bunny', url: 'https://www.dropbox.com/scl/fi/u62w30dx57aqro5x930ii/Kloufrends.mp3?rlkey=hdkap1wykamaqzr3z0hf8qlqb&st=73bxawee&raw=1', cover: albumCover },
+    { title: 'La Mudanza', artist: 'Bad Bunny', url: 'https://www.dropbox.com/scl/fi/gg9x1qe3bsk1r5gjtrqzh/La-Mudanza.mp3?rlkey=xobpjddh7omvd5jhi3xldr0vh&st=q97bimuz&raw=1', cover: albumCover },
+    { title: 'Lo Que Le Paso A Hawaii', artist: 'Bad Bunny', url: 'https://www.dropbox.com/scl/fi/seg5clkdkw9exvuigopu6/Lo-Que-Le-Paso-A-Hawaii.mp3?rlkey=fqyzr0vcl8wwu0a2y9sokxkae&st=7ntw46s2&raw=1', cover: albumCover },
+    { title: 'Perfumito Nuevo', artist: 'Bad Bunny', url: 'https://www.dropbox.com/scl/fi/3n5j0dhjgj6z4yu7katc9/Perfumito-Nuevo.mp3?rlkey=6zhzdlllkvlxi53gmumd9wpoq&st=fr7p0lah&raw=1', cover: albumCover },
+    { title: 'Pitorroco De Coco', artist: 'Bad Bunny', url: 'https://www.dropbox.com/scl/fi/0k7q5a4fk9ztm44z6m56z/Pitorroco-De-Coco.mp3?rlkey=42spck5hbs9pc23s9jizkaqmc&st=ijsy2xi9&raw=1', cover: albumCover },
+    { title: 'Turista', artist: 'Bad Bunny', url: 'https://www.dropbox.com/scl/fi/cu527wg467ma3uh9keefr/Turista.mp3?rlkey=q7grwihosq7qn17v6mzlisok1&st=tk7qklmv&raw=1', cover: albumCover },
+    { title: 'Veldad', artist: 'Bad Bunny', url: 'https://www.dropbox.com/scl/fi/q5y6pxtvio2cuctmkm2np/Veldad.mp3?rlkey=mlsuo2v58495lwn5j7hx9oa92&st=l4svhef3&raw=1', cover: albumCover },
+    { title: 'Voy A Llevarte A Pr', artist: 'Bad Bunny', url: 'https://www.dropbox.com/scl/fi/j5v5sqdb3lzcfqoh9foto/Voy-A-Llevarte-A-Pr.mp3?rlkey=2uhk19nf2tl64ldxwr6phn3wa&st=3oeb6uki&raw=1', cover: albumCover },
+    { title: 'Weltita', artist: 'Bad Bunny', url: 'https://www.dropbox.com/scl/fi/e4hahnbd3o9r2flfhl68u/Weltita.mp3?rlkey=q5dep0vgc4pazol3corzrl6g7&st=ie8i2pe0&raw=1', cover: albumCover }
+];
+
+const playlistEl = document.getElementById('playlist');
+const playBtn = document.getElementById('play');
+const nextBtn = document.getElementById('next');
+const prevBtn = document.getElementById('prev');
+const loopBtn = document.getElementById('loop');
+
+let currentIndex = 0;
+let isPlaying = false;
+let isLoop = false;
+const audio = new Audio();
+
+// Generar playlist
+tracks.forEach((track, index) => {
+    const div = document.createElement('div');
+    div.className = 'track-item';
+    
+    div.innerHTML = `
+        <div class="track-info">
+            <img src="${track.cover}" alt="cover">
+            <div class="track-text">
+                <div class="title">${track.title}</div>
+                <div class="artist">Bad Bunny</div>
+            </div>
+        </div>
+    `;
+    
+    div.addEventListener('click', () => {
+        currentIndex = index;
+        loadTrack();
+        playTrack();
+    });
+    
+    playlistEl.appendChild(div);
+});
+
+function loadTrack() {
+    const track = tracks[currentIndex];
+    audio.src = track.url;
+    highlightActive();
+}
+
+function highlightActive() {
+    document.querySelectorAll('.track-item').forEach((el, idx) => {
+        el.classList.toggle('active', idx === currentIndex);
+    });
+}
+
+function playTrack() {
+    audio.play();
+    isPlaying = true;
+    playBtn.querySelector('img').src = 'pause.png';
+}
+
+function pauseTrack() {
+    audio.pause();
+    isPlaying = false;
+    playBtn.querySelector('img').src = 'play.png';
+}
+
+playBtn.addEventListener('click', () => {
+    if (isPlaying) pauseTrack();
+    else playTrack();
+});
+
+nextBtn.addEventListener('click', () => {
+    currentIndex = (currentIndex + 1) % tracks.length;
+    loadTrack();
+    playTrack();
+});
+
+prevBtn.addEventListener('click', () => {
+    currentIndex = (currentIndex - 1 + tracks.length) % tracks.length;
+    loadTrack();
+    playTrack();
+});
+
+loopBtn.addEventListener('click', () => {
+    if (!isLoop) {
+        isLoop = true;
+        loopBtn.querySelector('img').src = 'repeat1.png';
+    } else if (isLoop && loopBtn.querySelector('img').src.includes('repeat1.png')) {
+        loopBtn.querySelector('img').src = 'repeatall.png';
+    } else {
+        isLoop = false;
+        loopBtn.querySelector('img').src = 'norepeat.png';
+    }
+});
+
+audio.addEventListener('ended', () => {
+    if (isLoop) playTrack();
+    else nextBtn.click();
+});
+
+function updateMediaSession(track) {
+    if ('mediaSession' in navigator) {
+        navigator.mediaSession.metadata = new MediaMetadata({
+            title: track.title,
+            artist: track.artist,
+            album: 'Cosa Nuestra',
+            artwork: [
+                { src: track.cover, sizes: '512x512', type: 'image/jpeg' }
+            ]
+        });
+
+        navigator.mediaSession.setActionHandler('play', () => playTrack());
+        navigator.mediaSession.setActionHandler('pause', () => pauseTrack());
+        navigator.mediaSession.setActionHandler('previoustrack', () => prevBtn.click());
+        navigator.mediaSession.setActionHandler('nexttrack', () => nextBtn.click());
+    }
+}
+
+function loadTrack() {
+    const track = tracks[currentIndex];
+    audio.src = track.url;
+    highlightActive();
+
+    // Actualiza el título de la pestaña
+    document.title = `${track.title} - ${track.artist}`;
+
+    // Actualiza Media Session
+    updateMediaSession(track);
+}
+
+
+// Cargar primera canción
+loadTrack();
+</script>
+
+</body>
+</html>
