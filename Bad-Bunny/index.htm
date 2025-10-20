@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Bad Bunny</title>
+<link rel="icon" href="../favicon.png" type="image/x-icon">
+<style>
+body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+    background-color: #1F1F1F; /* Color de respaldo */
+    color: #fff;
+}
+header {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    padding: 20px;
+    background-color: #333333;
+}
+header img {
+    width: 120px;
+    height: 120px;
+    border-radius: 12px;
+    object-fit: cover;
+}
+header h1 {
+    font-size: 2em;
+    margin: 0;
+}
+.artist-info {
+    padding: 20px;
+    text-align: center;
+}
+.artist-info p {
+    color: #fff;
+    margin-top: 10px;
+}
+.playlists-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+    gap: 20px;
+    padding: 20px;
+}
+.playlist-card {
+    background-color: #333333;
+    border-radius: 12px;
+    cursor: pointer;
+    overflow: hidden;
+    text-align: center;
+    transition: transform 0.2s, box-shadow 0.2s;
+}
+.playlist-card img {
+    width: 100%;
+    height: 180px;
+    object-fit: cover;
+}
+.playlist-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 20px rgba(0,0,0,0.5);
+}
+.playlist-name {
+    padding: 10px;
+    font-weight: bold;
+}
+</style>
+</head>
+<body>
+
+<header>
+    <img src="../BadBunny.jpg" alt="Bad Bunny">
+    <h1>Bad Bunny</h1>
+</header>
+
+<div class="artist-info">
+    <p>Bad Bunny es el nombre artístico del cantante y compositor puertorriqueño Benito Antonio Martínez Ocasio, nacido el 10 de marzo de 1994. Es una figura clave del género urbano, conocido por mezclar reguetón y trap latino, y por su estilo distintivo. Comenzó su carrera en plataformas digitales como SoundCloud, y se hizo famoso por su música, estilo de moda y actuaciones en vivo.</p>
+</div>
+
+<div class="playlists-container" id="playlists-container">
+    <!-- Se generarán los botones de playlists -->
+</div>
+
+<script>
+// Datos de playlists del artista
+const playlists = [
+    { name: "DeBÍ TiRAR MáS FOToS", cover: "../Untitled_design_7.webp", link: "/Bad-Bunny/DtMF" }
+];
+
+const container = document.getElementById('playlists-container');
+
+playlists.forEach(pl => {
+    const card = document.createElement('div');
+    card.className = 'playlist-card';
+    card.onclick = () => window.location.href = pl.link;
+
+    const img = document.createElement('img');
+    img.src = pl.cover;
+
+    const name = document.createElement('div');
+    name.className = 'playlist-name';
+    name.textContent = pl.name;
+
+    card.appendChild(img);
+    card.appendChild(name);
+    container.appendChild(card);
+});
+</script>
+
+</body>
+</html>
