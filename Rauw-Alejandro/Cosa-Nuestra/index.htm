@@ -1,0 +1,385 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Rauw Alejandro - Cosa Nuestra</title>
+<link rel="icon" href="../../favicon.png" type="image/x-icon">
+<style>
+body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+    background-color: #1f1f1f;
+    color: #fff;
+}
+
+header {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    padding: 20px;
+    background-color: #5E5E5E;
+}
+
+header img {
+    width: 120px;
+    height: 120px;
+    border-radius: 12px;
+    object-fit: cover;
+}
+
+header h1 {
+    font-size: 2em;
+    margin: 0;
+}
+
+.playlist-container {
+    display: flex;
+    flex-direction: column;
+    padding: 20px;
+    gap: 10px;
+}
+
+.track-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 12px;
+    background-color: #333333;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: transform 0.2s, background-color 0.2s;
+}
+
+.track-item:hover {
+    transform: translateY(-3px);
+    background-color: #fc32;
+}
+
+.track-item.active {
+    background-color: #3e8fc3;
+    color: #042027;
+}
+
+.track-info {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.track-info img {
+    width: 60px;
+    height: 60px;
+    border-radius: 8px;
+    object-fit: cover;
+    background-color: #333;
+}
+
+.track-text {
+    display: flex;
+    flex-direction: column;
+}
+
+.track-text .title {
+    font-weight: bold;
+}
+
+.track-text .artist {
+    font-size: 14px;
+    color: #bbb;
+}
+
+.player {
+    position: sticky;
+    bottom: 0;
+    background-color: #333333;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 12px;
+    padding: 10px;
+    border-top: 1px solid #fc32;
+}
+
+.player button {
+    background: none;
+    border: none;
+    cursor: pointer;
+    transition: transform 0.2s;
+}
+
+.player button:hover {
+    transform: scale(1.2);
+}
+.player button:active {
+    transform: scale(0.9);
+}
+
+.player img {
+    width: 40px;
+    height: 40px;
+}
+</style>
+</head>
+<body>
+
+<header>
+    <img src="https://www.dropbox.com/scl/fi/6tb3x58aqryav23x9nrno/Cosa-Nuestra.jpg?rlkey=jt9sgrqwdr58g73o2wlrxvmda&st=ibgnqj0z&raw=1" alt="Cosa Nuestra">
+    <h1>Cosa Nuestra</h1>
+</header>
+
+<div class="playlist-container" id="playlist">
+    <!-- Tracks generados aquí -->
+</div>
+
+<div class="player">
+    <button id="prev"><img src="prev.png" alt="Anterior"></button>
+    <button id="play"><img src="play.png" alt="Play/Pause"></button>
+    <button id="next"><img src="next.png" alt="Siguiente"></button>
+    <button id="loop"><img src="norepeat.png" alt="Repetir"></button>
+</div>
+
+<script>
+const tracks = [
+    { 
+        title: 'Cosa Nuestra', 
+        artist: 'Rauw Alejandro', 
+        url: 'https://www.dropbox.com/scl/fi/t3gm5roh76cz0cp44kahj/001-Rauw-Alejandro-Cosa-Nuestra-Official-Lyric-Video.mp3?rlkey=vqpdmqdse399ty30bhedeky4d&st=2fvaf553&raw=1', 
+        cover: 'https://www.dropbox.com/scl/fi/6tb3x58aqryav23x9nrno/Cosa-Nuestra.jpg?rlkey=jt9sgrqwdr58g73o2wlrxvmda&st=ibgnqj0z&raw=1' 
+    },
+    { 
+        title: 'Déjame Entrar', 
+        artist: 'Rauw Alejandro', 
+        url: 'https://www.dropbox.com/scl/fi/7hwdlwuh9c15cc8yyhk8d/002-Rauw-Alejandro-D-jame-Entrar-Official-Video.mp3?rlkey=zsnofw6zc443d24jyak59hmfx&st=rgsaibll&raw=1', 
+        cover: 'https://www.dropbox.com/scl/fi/6tb3x58aqryav23x9nrno/Cosa-Nuestra.jpg?rlkey=jt9sgrqwdr58g73o2wlrxvmda&st=ibgnqj0z&raw=1' 
+    },
+    { 
+        title: 'Qué Pasaría', 
+        artist: 'Rauw Alejandro & Bad Bunny', 
+        url: 'https://www.dropbox.com/scl/fi/7hwdlwuh9c15cc8yyhk8d/002-Rauw-Alejandro-D-jame-Entrar-Official-Video.mp3?rlkey=zsnofw6zc443d24jyak59hmfx&st=rgsaibll&raw=1', 
+        cover: 'https://www.dropbox.com/scl/fi/6tb3x58aqryav23x9nrno/Cosa-Nuestra.jpg?rlkey=jt9sgrqwdr58g73o2wlrxvmda&st=ibgnqj0z&raw=1' 
+    },
+        { 
+        title: 'Tú con Él', 
+        artist: 'Rauw Alejandro', 
+        url: 'https://www.dropbox.com/scl/fi/78hkejxuqng8hd0yp1l7q/004-Rauw-Alejandro-T-Con-l-Official-Lyric-Video.mp3?rlkey=t9aj78pmany1ejwv85qe5t9kn&st=swawwgln&raw=1', 
+        cover: 'https://www.dropbox.com/scl/fi/6tb3x58aqryav23x9nrno/Cosa-Nuestra.jpg?rlkey=jt9sgrqwdr58g73o2wlrxvmda&st=ibgnqj0z&raw=1' 
+    },
+    { 
+        title: 'Committed', 
+        artist: 'Rauw Alejandro & Pharrell Williams', 
+        url: 'https://www.dropbox.com/scl/fi/dn1cz6dnptgnlq81993z5/005-Rauw-Alejandro-Pharrell-Williams-Committed-Official-Lyric-Video.mp3?rlkey=v6psflnmpolfp7yyhwwin5r0q&st=5ww2lzk6&raw=1', 
+        cover: 'https://www.dropbox.com/scl/fi/6tb3x58aqryav23x9nrno/Cosa-Nuestra.jpg?rlkey=jt9sgrqwdr58g73o2wlrxvmda&st=ibgnqj0z&raw=1' 
+    },
+    { 
+        title: 'Espresso Martini', 
+        artist: 'Rauw Alejandro & Marconi Impara & Yan Block', 
+        url: 'https://www.dropbox.com/scl/fi/nqtf58iau0nxltrkbxu7m/006-Rauw-Alejandro-Marconi-Impara-Yan-Block-Espresso-Martini-Official-Lyric-Video.mp3?rlkey=uz2oitkoa30gwm6ies3si4hdw&st=j08bytc3&raw=1', 
+        cover: 'https://www.dropbox.com/scl/fi/6tb3x58aqryav23x9nrno/Cosa-Nuestra.jpg?rlkey=jt9sgrqwdr58g73o2wlrxvmda&st=ibgnqj0z&raw=1' 
+    },
+        { 
+        title: 'Baja Pa´ Acá', 
+        artist: 'Rauw Alejandro & Alexis & Fido', 
+        url: 'https://www.dropbox.com/scl/fi/hds80hyosc18oe9zg8y9w/007-Rauw-Alejandro-Alexis-Fido-Baja-Pa-Ac-Official-Lyric-Video.mp3?rlkey=vxweydyiia5zie8rf2gedgixn&st=m1lt1gw9&raw=1', 
+        cover: 'https://www.dropbox.com/scl/fi/6tb3x58aqryav23x9nrno/Cosa-Nuestra.jpg?rlkey=jt9sgrqwdr58g73o2wlrxvmda&st=ibgnqj0z&raw=1' 
+    },
+    { 
+        title: 'Ni Me Conozco', 
+        artist: 'Rauw Alejandro', 
+        url: 'https://www.dropbox.com/scl/fi/5j5b4m6db75cqix3p9eps/008-Rauw-Alejandro-Ni-Me-Conozco-Official-Video.mp3?rlkey=wfjtg0lupuhwbv348xdvih19f&st=0bs7u4bb&raw=1', 
+        cover: 'https://www.dropbox.com/scl/fi/6tb3x58aqryav23x9nrno/Cosa-Nuestra.jpg?rlkey=jt9sgrqwdr58g73o2wlrxvmda&st=ibgnqj0z&raw=1' 
+    },
+    { 
+        title: 'IL Capo', 
+        artist: 'Rauw Alejandro & Bad Bunny', 
+        url: 'https://www.dropbox.com/scl/fi/r5jxuo5k8cr2hcfwyrty0/009-Rauw-Alejandro-IL-Capo-Official-Lyric-Video.mp3?rlkey=htytwyqsy6utqpzotljdiydyk&st=0gj275aj&raw=1', 
+        cover: 'https://www.dropbox.com/scl/fi/6tb3x58aqryav23x9nrno/Cosa-Nuestra.jpg?rlkey=jt9sgrqwdr58g73o2wlrxvmda&st=ibgnqj0z&raw=1' 
+    },
+        { 
+        title: 'Revolú', 
+        artist: 'Rauw Alejandro & Feid', 
+        url: 'https://www.dropbox.com/scl/fi/3m3pxjwh5h54zdw6v5wfo/010-Rauw-Alejandro-Feid-Revol-Official-Lyric-Video.mp3?rlkey=zzed5j65tvc9d5dqsnq2ko6nz&st=9qquodyv&raw=1', 
+        cover: 'https://www.dropbox.com/scl/fi/6tb3x58aqryav23x9nrno/Cosa-Nuestra.jpg?rlkey=jt9sgrqwdr58g73o2wlrxvmda&st=ibgnqj0z&raw=1' 
+    },
+    { 
+        title: 'Mil Mujeres', 
+        artist: 'Rauw Alejandro & Pharrell Williams', 
+        url: 'https://www.dropbox.com/scl/fi/6zvk0py7ql52ipyzcp73m/011-Rauw-Alejandro-Mil-Mujeres-Official-Lyric-Video.mp3?rlkey=i9o9lz3l5y6gxokuil1dnsey6&st=1l5xpcfh&raw=1', 
+        cover: 'https://www.dropbox.com/scl/fi/6tb3x58aqryav23x9nrno/Cosa-Nuestra.jpg?rlkey=jt9sgrqwdr58g73o2wlrxvmda&st=ibgnqj0z&raw=1' 
+    },
+    { 
+        title: 'Khe?', 
+        artist: 'Rauw Alejandro & Romeo Santos', 
+        url: 'https://www.dropbox.com/scl/fi/o2eobv6ucq7ivnnwskoxv/012-Rauw-Alejandro-Romeo-Santos-Kh-Official-Video.mp3?rlkey=kfmdox30ah78hs6f67trlaich&st=9z5dbu4l&raw=1', 
+        cover: 'https://www.dropbox.com/scl/fi/6tb3x58aqryav23x9nrno/Cosa-Nuestra.jpg?rlkey=jt9sgrqwdr58g73o2wlrxvmda&st=ibgnqj0z&raw=1' 
+    },
+        { 
+        title: 'Se Fue', 
+        artist: 'Rauw Alejandro & Laura Pausini', 
+        url: 'https://www.dropbox.com/scl/fi/erl2weoq4cie01iqg1uq9/013-Rauw-Alejandro-Laura-Pausini-Se-Fue-Official-Lyric-Video.mp3?rlkey=tw3ghcnaihmu8iii8kad6hfxs&st=h3dip7or&raw=1', 
+        cover: 'https://www.dropbox.com/scl/fi/6tb3x58aqryav23x9nrno/Cosa-Nuestra.jpg?rlkey=jt9sgrqwdr58g73o2wlrxvmda&st=ibgnqj0z&raw=1' 
+    },
+    { 
+        title: 'Pasaporte', 
+        artist: 'Rauw Alejandro & Mr. Naisgai', 
+        url: 'https://www.dropbox.com/scl/fi/chbuwerg5meg5txn0up55/014-Rauw-Alejandro-Mr.-Naisgai-Pasaporte-Official-Video.mp3?rlkey=fa62kk4yuf1w2od3aj5gsac62&st=bgnqfr2a&raw=1', 
+        cover: 'https://www.dropbox.com/scl/fi/6tb3x58aqryav23x9nrno/Cosa-Nuestra.jpg?rlkey=jt9sgrqwdr58g73o2wlrxvmda&st=ibgnqj0z&raw=1' 
+    },
+    { 
+        title: 'Touching The Sky', 
+        artist: 'Rauw Alejandro', 
+        url: 'https://www.dropbox.com/scl/fi/sksc1fk1raufz8rdj3txv/015-Rauw-Alejandro-Touching-The-Sky-Official-Video.mp3?rlkey=2e2ol7pxk5cepo1rbd55lxjlz&st=elzrf29z&raw=1', 
+        cover: 'https://www.dropbox.com/scl/fi/6tb3x58aqryav23x9nrno/Cosa-Nuestra.jpg?rlkey=jt9sgrqwdr58g73o2wlrxvmda&st=ibgnqj0z&raw=1' 
+    },
+        { 
+        title: 'Amar De Nuevo', 
+        artist: 'Rauw Alejandro', 
+        url: 'https://www.dropbox.com/scl/fi/wi2kuryiv3n6im2nh0gik/016-Rauw-Alejandro-Amar-De-Nuevo-Official-Lyric-Video.mp3?rlkey=35olr4s3pwllhs9kgsrn6pj7x&st=dkh2n8gv&raw=1', 
+        cover: 'https://www.dropbox.com/scl/fi/6tb3x58aqryav23x9nrno/Cosa-Nuestra.jpg?rlkey=jt9sgrqwdr58g73o2wlrxvmda&st=ibgnqj0z&raw=1' 
+    },
+    { 
+        title: '2:12 AM', 
+        artist: 'Rauw Alejandro & LATIN MAFIA', 
+        url: 'https://www.dropbox.com/scl/fi/urgfpj1ipjewgxeya2svt/017-Rauw-Alejandro-LATIN-MAFIA-2_12-AM-Official-Lyric-Video.mp3?rlkey=79lo2ip69tjjydke4miw566gi&st=gyngxc1r&raw=1', 
+        cover: 'https://www.dropbox.com/scl/fi/6tb3x58aqryav23x9nrno/Cosa-Nuestra.jpg?rlkey=jt9sgrqwdr58g73o2wlrxvmda&st=ibgnqj0z&raw=1' 
+    },
+    { 
+        title: 'SEXXXMACHINE', 
+        artist: 'Rauw Alejandro', 
+        url: 'https://www.dropbox.com/scl/fi/hqpq48hfwcg431qudznlu/018-Rauw-Alejandro-SEXXXMACHINE-Official-Lyric-Video.mp3?rlkey=k25e0om8ftq171lwnei3ypn2j&st=4197xugg&raw=1', 
+        cover: 'https://www.dropbox.com/scl/fi/6tb3x58aqryav23x9nrno/Cosa-Nuestra.jpg?rlkey=jt9sgrqwdr58g73o2wlrxvmda&st=ibgnqj0z&raw=1' 
+    }
+];
+
+
+const playlistEl = document.getElementById('playlist');
+const playBtn = document.getElementById('play');
+const nextBtn = document.getElementById('next');
+const prevBtn = document.getElementById('prev');
+const loopBtn = document.getElementById('loop');
+
+let currentIndex = 0;
+let isPlaying = false;
+let isLoop = false;
+const audio = new Audio();
+
+// Generar playlist
+tracks.forEach((track, index) => {
+    const div = document.createElement('div');
+    div.className = 'track-item';
+    
+    div.innerHTML = `
+        <div class="track-info">
+            <img src="${track.cover}" alt="Cosa Nuestra">
+            <div class="track-text">
+                <div class="title">${track.title}</div>
+                <div class="artist">${track.artist}</div>
+            </div>
+        </div>
+    `;
+    
+    div.addEventListener('click', () => {
+        currentIndex = index;
+        loadTrack();
+        playTrack();
+    });
+    
+    playlistEl.appendChild(div);
+});
+
+
+function loadTrack() {
+    const track = tracks[currentIndex];
+    audio.src = track.url;
+    highlightActive();
+}
+
+function highlightActive() {
+    document.querySelectorAll('.track-item').forEach((el, idx) => {
+        el.classList.toggle('active', idx === currentIndex);
+    });
+}
+
+function playTrack() {
+    audio.play();
+    isPlaying = true;
+    playBtn.querySelector('img').src = 'pause.png';
+}
+
+function pauseTrack() {
+    audio.pause();
+    isPlaying = false;
+    playBtn.querySelector('img').src = 'play.png';
+}
+
+playBtn.addEventListener('click', () => {
+    if (isPlaying) pauseTrack();
+    else playTrack();
+});
+
+nextBtn.addEventListener('click', () => {
+    currentIndex = (currentIndex + 1) % tracks.length;
+    loadTrack();
+    playTrack();
+});
+
+prevBtn.addEventListener('click', () => {
+    currentIndex = (currentIndex - 1 + tracks.length) % tracks.length;
+    loadTrack();
+    playTrack();
+});
+
+loopBtn.addEventListener('click', () => {
+    if (!isLoop) {
+        isLoop = true;
+        loopBtn.querySelector('img').src = 'repeat1.png';
+    } else if (isLoop && loopBtn.querySelector('img').src.includes('repeat1.png')) {
+        loopBtn.querySelector('img').src = 'repeatall.png';
+    } else {
+        isLoop = false;
+        loopBtn.querySelector('img').src = 'norepeat.png';
+    }
+});
+
+audio.addEventListener('ended', () => {
+    if (isLoop) playTrack();
+    else nextBtn.click();
+});
+
+function updateMediaSession(track) {
+    if ('mediaSession' in navigator) {
+        navigator.mediaSession.metadata = new MediaMetadata({
+            title: track.title,
+            artist: track.artist,
+            album: 'Cosa Nuestra',
+            artwork: [
+                { src: track.cover, sizes: '512x512', type: 'image/jpeg' }
+            ]
+        });
+
+        navigator.mediaSession.setActionHandler('play', () => playTrack());
+        navigator.mediaSession.setActionHandler('pause', () => pauseTrack());
+        navigator.mediaSession.setActionHandler('previoustrack', () => prevBtn.click());
+        navigator.mediaSession.setActionHandler('nexttrack', () => nextBtn.click());
+    }
+}
+
+function loadTrack() {
+    const track = tracks[currentIndex];
+    audio.src = track.url;
+    highlightActive();
+
+    // Actualiza el título de la pestaña
+    document.title = `${track.title} - ${track.artist}`;
+
+    // Actualiza Media Session
+    updateMediaSession(track);
+}
+
+
+// Cargar primera canción
+loadTrack();
+</script>
+
+</body>
+</html>
